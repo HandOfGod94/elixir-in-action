@@ -19,28 +19,19 @@ defmodule Calculator do
   defp loop(current_value) do
     new_value = receive do
       message ->
-        process_messaage(current_value, message)
-      end
-
-      {:sub, value} -> current_value - value
-      {:mul, value} -> current_value * value
-      {:div, value} -> current_value / valueA
-
-      invalid_request ->
-        IO.puts("invalid request: #{inspect(invalid_request)}")
-        current_value
+        process_message(current_value, message)
     end
 
     loop(new_value)
   end
 
   defp process_message(current_value, {:value, caller}) do
-    send(caller, current_value)
+    send(caller, {:response, current_value})
     current_value
   end
 
-  defp process_messsage(current_value, {:add, value}), do: current_value + value
-  defp process_messsage(current_value, {:sub, value}), do: current_value - value
-  defp process_messsage(current_value, {:mul, value}), do: current_value * value
-  defp process_messsage(current_value, {:div, value}), do: current_value / value
+  defp process_message(current_value, {:add, value}), do: current_value + value
+  defp process_message(current_value, {:sub, value}), do: current_value - value
+  defp process_message(current_value, {:mul, value}), do: current_value * value
+  defp process_message(current_value, {:div, value}), do: current_value / value
 end
